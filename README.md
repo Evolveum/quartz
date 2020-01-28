@@ -2,7 +2,7 @@
 ## About
 Contains original Quartz Scheduler code with some functionality provided by Evolveum.
 
-The functionality that was added allows execution nodes to specify limits on the number of threads 
+The main functionality that was added allows execution nodes to specify limits on the number of threads 
 for so called _execution groups_. It is a partial implementation of [issue #175](https://github.com/quartz-scheduler/quartz/issues/175).
 
 ## Execution groups
@@ -84,7 +84,7 @@ ALTER TABLE QRTZ_FIRED_TRIGGERS ADD COLUMN EXECUTION_GROUP VARCHAR(200) NULL;
 ## Additional information
 _Execution groups_ feature is supported on JDBC and RAM job stores.
 
-Current version of the code is 2.3.0.e2, which is based on Quartz 2.3.0. (It also includes some minor fixes committed after 2.3.0 release.) 
+Current version of the code is 2.3.0.e3, which is based on Quartz 2.3.0. (It also includes some minor fixes committed after 2.3.0 release.) 
 Note that this version is _not_ backwards compatible with 2.3.0.e1, which used a different approach to limit execution
 of jobs on nodes.
 

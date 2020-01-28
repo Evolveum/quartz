@@ -130,6 +130,8 @@ public abstract class JobStoreSupport implements JobStore, Constants, ExecutionL
 
     private long clusterCheckinInterval = 7500L;
 
+    private long clusterCheckinGracePeriod = 7500L;
+
     private ClusterManager clusterManagementThread = null;
 
     private MisfireHandler misfireHandler = null;
@@ -324,7 +326,6 @@ public abstract class JobStoreSupport implements JobStore, Constants, ExecutionL
     public long getClusterCheckinInterval() {
         return clusterCheckinInterval;
     }
-
     /**
      * <p>
      * Set the frequency (in milliseconds) at which this instance "checks-in"
@@ -335,6 +336,29 @@ public abstract class JobStoreSupport implements JobStore, Constants, ExecutionL
     @SuppressWarnings("UnusedDeclaration") /* called reflectively */
     public void setClusterCheckinInterval(long l) {
         clusterCheckinInterval = l;
+    }
+
+    /**
+     * <p>
+     * Get grace period (in milliseconds) after which this instance considers other instances
+     * that failed to check in as dead. -- Balances the immediacy of detecting failed instances
+     * with the accepted inaccuracy of clocks within cluster.
+     * </p>
+     */
+    public long getClusterCheckinGracePeriod() {
+        return clusterCheckinGracePeriod;
+    }
+
+    /**
+     * <p>
+     * Set grace period (in milliseconds) after which this instance considers other instances
+     * that failed to check in as dead. -- Balances the immediacy of detecting failed instances
+     * with the accepted inaccuracy of clocks within cluster.
+     * </p>
+     */
+    @SuppressWarnings("UnusedDeclaration") /* called reflectively */
+    public void setClusterCheckinGracePeriod(long clusterCheckinGracePeriod) {
+        this.clusterCheckinGracePeriod = clusterCheckinGracePeriod;
     }
 
     /**
@@ -3480,7 +3504,7 @@ public abstract class JobStoreSupport implements JobStore, Constants, ExecutionL
         return rec.getCheckinTimestamp() +
             Math.max(rec.getCheckinInterval(), 
                     (System.currentTimeMillis() - lastCheckin)) +
-            7500L;
+            getClusterCheckinGracePeriod();
     }
     
     protected List<SchedulerStateRecord> clusterCheckIn(Connection conn)
