@@ -2653,7 +2653,7 @@ public class StdJDBCDelegate implements DriverDelegate, StdJDBCConstants {
             setExecutionGroupClauseParameters(ps, 4, executionGroupClauseInfo);
             rs = ps.executeQuery();
             
-            while (rs.next() && nextTriggers.size() <= maxCount) {
+            while (rs.next() && nextTriggers.size() < maxCount) {
                 String executionGroup = rs.getString(COL_EXECUTION_GROUP);
                 if (checkExecutionLimits(executionGroup, limitsWorkingCopy)) {
                     nextTriggers.add(triggerKey(
@@ -2661,7 +2661,7 @@ public class StdJDBCDelegate implements DriverDelegate, StdJDBCConstants {
                             rs.getString(COL_TRIGGER_GROUP)));
                 }
             }
-            
+
             return nextTriggers;
         } finally {
             closeResultSet(rs);

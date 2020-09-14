@@ -46,6 +46,7 @@ import org.quartz.spi.ThreadPool;
 import org.quartz.utils.ConnectionProvider;
 import org.quartz.utils.DBConnectionManager;
 import org.quartz.utils.JNDIConnectionProvider;
+import org.quartz.utils.C3p0PoolingConnectionProvider;
 import org.quartz.utils.PoolingConnectionProvider;
 import org.quartz.utils.PropertiesParser;
 import org.slf4j.Logger;
@@ -65,6 +66,7 @@ import java.lang.reflect.Method;
 import java.security.AccessControlException;
 import java.util.Collection;
 import java.util.HashMap;
+import java.util.Enumeration;
 import java.util.Locale;
 import java.util.Map;
 import java.util.Properties;
@@ -472,19 +474,20 @@ public class StdSchedulerFactory implements SchedulerFactory {
             }
         }
 
-        initialize(overrideWithSysProps(props));
+        initialize(overrideWithSysProps(props, getLog()));
     }
 
     /**
      * Add all System properties to the given <code>props</code>.  Will override
      * any properties that already exist in the given <code>props</code>.
      */
-    private Properties overrideWithSysProps(Properties props) {
+    // Visible for testing
+    static Properties overrideWithSysProps(Properties props, Logger log) {
         Properties sysProps = null;
         try {
             sysProps = System.getProperties();
         } catch (AccessControlException e) {
-            getLog().warn(
+            log.warn(
                 "Skipping overriding quartz properties with System properties " +
                 "during initialization because of an AccessControlException.  " +
                 "This is likely due to not having read/write access for " +
@@ -495,7 +498,17 @@ public class StdSchedulerFactory implements SchedulerFactory {
         }
 
         if (sysProps != null) {
-            props.putAll(sysProps);
+            // Use the propertyNames to iterate to avoid
+            // a possible ConcurrentModificationException
+            Enumeration<?> en = sysProps.propertyNames();
+            while (en.hasMoreElements()) {
+                Object name = en.nextElement();
+                Object value = sysProps.get(name);
+                if (name instanceof String && value instanceof String) {
+                    // Properties javadoc discourages use of put so we use setProperty
+                    props.setProperty((String) name, (String) value);
+                }
+            }
         }
 
         return props;
@@ -1438,7 +1451,15 @@ public class StdSchedulerFactory implements SchedulerFactory {
         copyProps.remove(PoolingConnectionProvider.DB_PASSWORD);
         copyProps.remove(PoolingConnectionProvider.DB_MAX_CONNECTIONS);
         copyProps.remove(PoolingConnectionProvider.DB_VALIDATION_QUERY);
-        props.remove(PoolingConnectionProvider.POOLING_PROVIDER);
+        copyProps.remove(PoolingConnectionProvider.POOLING_PROVIDER);
+
+        if (cp instanceof C3p0PoolingConnectionProvider) {
+            copyProps.remove(C3p0PoolingConnectionProvider.DB_MAX_CACHED_STATEMENTS_PER_CONNECTION);
+            copyProps.remove(C3p0PoolingConnectionProvider.DB_VALIDATE_ON_CHECKOUT);
+            copyProps.remove(C3p0PoolingConnectionProvider.DB_IDLE_VALIDATION_SECONDS);
+            copyProps.remove(C3p0PoolingConnectionProvider.DB_DISCARD_IDLE_CONNECTIONS_SECONDS);
+        }
+
         setBeanProps(cp.getDataSource(), copyProps);
     }
 

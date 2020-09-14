@@ -71,7 +71,7 @@ public class ManyTriggerClient extends ClientBase {
     } else {
       barrier.await();
 
-      JobDetail jobDetail = newJob(MyJob.class).withIdentity("testJob").storeDurably(true).build();
+      JobDetail jobDetail = newJob(MyJob.class).withIdentity("testJob").storeDurably().build();
 
       sched.addJob(jobDetail, false);
 

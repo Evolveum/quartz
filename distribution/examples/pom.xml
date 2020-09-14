@@ -6,7 +6,7 @@
   <parent>
     <groupId>org.quartz-scheduler</groupId>
     <artifactId>quartz-parent</artifactId>
-    <version>2.3.0.e3</version>
+    <version>2.3.2.e1</version>
     <relativePath>../../pom.xml</relativePath>
   </parent>
 
@@ -17,6 +17,7 @@
   <properties>
     <skipDeploy>true</skipDeploy>
     <skipJavadoc>true</skipJavadoc>
+    <skipCheckstyle>true</skipCheckstyle>
     <mainClass>org.quartz.examples.example1.SimpleExample</mainClass>
   </properties>
 

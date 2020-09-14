@@ -5,7 +5,7 @@
   <parent>
     <groupId>org.quartz-scheduler</groupId>
     <artifactId>quartz-parent</artifactId>
-    <version>2.3.0.e3</version>
+    <version>2.3.2.e1</version>
   </parent>
 
   <artifactId>quartz</artifactId>
@@ -76,44 +76,22 @@
       </resource>
     </resources>
     
-    <plugins>   
-      <!--<plugin>-->
-        <!--<groupId>org.terracotta</groupId>-->
-        <!--<artifactId>maven-forge-plugin</artifactId>-->
-        <!--<version>${maven-forge-plugin.version}</version>-->
-        <!--<executions>-->
-          <!--<execution>-->
-            <!--<id>create-manifest</id>-->
-            <!--<phase>process-resources</phase>-->
-            <!--<goals>-->
-              <!--<goal>manifest</goal>-->
-            <!--</goals>-->
-            <!--<configuration>-->
-              <!--<rootPath>${basedir}/..</rootPath>-->
-              <!--<manifestFile>${project.build.directory}/MANIFEST.MF</manifestFile>-->
-              <!--<manifestEntries>-->
-                <!--<License>Apache Software License, Version 2.0</License>-->
-                <!--<Terracotta-ProjectStatus>Supported</Terracotta-ProjectStatus>-->
-                <!--<Terracotta-Name>${project.artifactId}</Terracotta-Name>-->
-                <!--<Terracotta-Description>${project.description}</Terracotta-Description>-->
-              <!--</manifestEntries>-->
-            <!--</configuration>            -->
-          <!--</execution>-->
-          <!--<execution>-->
-            <!--<id>enforce-dependencies</id>-->
-            <!--<goals>-->
-              <!--<goal>enforceDependencies</goal>-->
-            <!--</goals>-->
-            <!--<phase>verify</phase>-->
-            <!--<configuration>-->
-              <!--<enforceGroupId>org.quartz-scheduler.internal</enforceGroupId>-->
-              <!--<enforceArtifactId>quartz-core</enforceArtifactId>-->
-              <!--<enforceVersion>${project.version}</enforceVersion>-->
-            <!--</configuration>-->
-          <!--</execution>           -->
-        <!--</executions>-->
-      <!--</plugin>-->
-      
+    <plugins>
+<!--      <plugin>-->
+<!--        <groupId>org.apache.maven.plugins</groupId>-->
+<!--        <artifactId>maven-jar-plugin</artifactId>-->
+<!--        <configuration>-->
+<!--          <archive>-->
+<!--            <manifestEntries>-->
+<!--              <License>Apache Software License, Version 2.0</License>-->
+<!--              <Terracotta-ProjectStatus>Supported</Terracotta-ProjectStatus>-->
+<!--              <Terracotta-Name>${project.artifactId}</Terracotta-Name>-->
+<!--              <Terracotta-Description>${project.description}</Terracotta-Description>-->
+<!--            </manifestEntries>-->
+<!--          </archive>-->
+<!--        </configuration>-->
+<!--      </plugin>-->
+
       <plugin>
         <groupId>org.apache.maven.plugins</groupId>
         <artifactId>maven-javadoc-plugin</artifactId>

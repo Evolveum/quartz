@@ -107,15 +107,15 @@ go
 
 create table QRTZ_CALENDARS (
 SCHED_NAME varchar(120) not null,
-CALENDAR_NAME varchar(80) not null,
+CALENDAR_NAME varchar(200) not null,
 CALENDAR image not null
 )
 go
 
 create table QRTZ_CRON_TRIGGERS (
 SCHED_NAME varchar(120) not null,
-TRIGGER_NAME varchar(80) not null,
-TRIGGER_GROUP varchar(80) not null,
+TRIGGER_NAME varchar(200) not null,
+TRIGGER_GROUP varchar(200) not null,
 CRON_EXPRESSION varchar(120) not null,
 TIME_ZONE_ID varchar(80) null,
 )
@@ -123,23 +123,23 @@ go
 
 create table QRTZ_PAUSED_TRIGGER_GRPS (
 SCHED_NAME varchar(120) not null,
-TRIGGER_GROUP  varchar(80) not null, 
+TRIGGER_GROUP  varchar(200) not null, 
 )
 go
 
 create table QRTZ_FIRED_TRIGGERS(
 SCHED_NAME varchar(120) not null,
 ENTRY_ID varchar(95) not null,
-TRIGGER_NAME varchar(80) not null,
-TRIGGER_GROUP varchar(80) not null,
-INSTANCE_NAME varchar(80) not null,
+TRIGGER_NAME varchar(200) not null,
+TRIGGER_GROUP varchar(200) not null,
+INSTANCE_NAME varchar(200) not null,
 FIRED_TIME numeric(13,0) not null,
 SCHED_TIME numeric(13,0) not null,
 PRIORITY int not null,
 EXECUTION_GROUP varchar(80) null,
 STATE varchar(16) not null,
-JOB_NAME varchar(80) null,
-JOB_GROUP varchar(80) null,
+JOB_NAME varchar(200) null,
+JOB_GROUP varchar(200) null,
 IS_NONCONCURRENT bit not null,
 REQUESTS_RECOVERY bit not null,
 )
@@ -147,7 +147,7 @@ go
 
 create table QRTZ_SCHEDULER_STATE (
 SCHED_NAME varchar(120) not null,
-INSTANCE_NAME varchar(80) not null,
+INSTANCE_NAME varchar(200) not null,
 LAST_CHECKIN_TIME numeric(13,0) not null,
 CHECKIN_INTERVAL numeric(13,0) not null,
 )
@@ -162,10 +162,10 @@ go
 
 create table QRTZ_JOB_DETAILS (
 SCHED_NAME varchar(120) not null,
-JOB_NAME varchar(80) not null,
-JOB_GROUP varchar(80) not null,
-DESCRIPTION varchar(120) null,
-JOB_CLASS_NAME varchar(128) not null,
+JOB_NAME varchar(200) not null,
+JOB_GROUP varchar(200) not null,
+DESCRIPTION varchar(250) null,
+JOB_CLASS_NAME varchar(250) not null,
 IS_DURABLE bit not null,
 IS_NONCONCURRENT bit not null,
 IS_UPDATE_DATA bit not null,
@@ -176,8 +176,8 @@ go
 
 create table QRTZ_SIMPLE_TRIGGERS (
 SCHED_NAME varchar(120) not null,
-TRIGGER_NAME varchar(80) not null,
-TRIGGER_GROUP varchar(80) not null,
+TRIGGER_NAME varchar(200) not null,
+TRIGGER_GROUP varchar(200) not null,
 REPEAT_COUNT numeric(13,0) not null,
 REPEAT_INTERVAL numeric(13,0) not null,
 TIMES_TRIGGERED numeric(13,0) not null
@@ -205,19 +205,19 @@ go
 
 create table QRTZ_BLOB_TRIGGERS (
 SCHED_NAME varchar(120) not null,
-TRIGGER_NAME varchar(80) not null,
-TRIGGER_GROUP varchar(80) not null,
+TRIGGER_NAME varchar(200) not null,
+TRIGGER_GROUP varchar(200) not null,
 BLOB_DATA image null
 )
 go
 
 create table QRTZ_TRIGGERS (
 SCHED_NAME varchar(120) not null,
-TRIGGER_NAME varchar(80) not null,
-TRIGGER_GROUP varchar(80) not null,
-JOB_NAME varchar(80) not null,
-JOB_GROUP varchar(80) not null,
-DESCRIPTION varchar(120) null,
+TRIGGER_NAME varchar(200) not null,
+TRIGGER_GROUP varchar(200) not null,
+JOB_NAME varchar(200) not null,
+JOB_GROUP varchar(200) not null,
+DESCRIPTION varchar(250) null,
 NEXT_FIRE_TIME numeric(13,0) null,
 PREV_FIRE_TIME numeric(13,0) null,
 PRIORITY int null,
@@ -226,7 +226,7 @@ TRIGGER_STATE varchar(16) not null,
 TRIGGER_TYPE varchar(8) not null,
 START_TIME numeric(13,0) not null,
 END_TIME numeric(13,0) null,
-CALENDAR_NAME varchar(80) null,
+CALENDAR_NAME varchar(200) null,
 MISFIRE_INSTR smallint null,
 JOB_DATA image null
 )

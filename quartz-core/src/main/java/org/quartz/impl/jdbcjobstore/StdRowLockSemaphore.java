@@ -62,7 +62,29 @@ public class StdRowLockSemaphore extends DBSemaphore {
     public StdRowLockSemaphore(String tablePrefix, String schedName, String selectWithLockSQL) {
         super(tablePrefix, schedName, selectWithLockSQL != null ? selectWithLockSQL : SELECT_FOR_LOCK, INSERT_LOCK);
     }
-    
+
+    // Data Members
+
+    // Configurable lock retry parameters
+    private int maxRetry = 3;
+    private long retryPeriod = 1000L;
+
+    public void setMaxRetry(int maxRetry) {
+        this.maxRetry = maxRetry;
+    }
+
+    public void setRetryPeriod(long retryPeriod) {
+        this.retryPeriod = retryPeriod;
+    }
+
+    public int getMaxRetry() {
+        return maxRetry;
+    }
+
+    public long getRetryPeriod() {
+        return retryPeriod;
+    }
+
     /*
      * ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
      * 
@@ -82,6 +104,11 @@ public class StdRowLockSemaphore extends DBSemaphore {
         
         // attempt lock two times (to work-around possible race conditions in inserting the lock row the first time running)
         int count = 0;
+
+        // Configurable lock retry attempts
+        int maxRetryLocal = this.maxRetry;
+        long retryPeriodLocal = this.retryPeriod;
+
         do {
             count++;
             try {
@@ -108,10 +135,10 @@ public class StdRowLockSemaphore extends DBSemaphore {
                     int res = ps.executeUpdate();
                     
                     if(res != 1) {
-                        if(count < 3) {
+                        if(count < maxRetryLocal) {
                             // pause a bit to give another thread some time to commit the insert of the new lock row
                             try {
-                                Thread.sleep(1000L);
+                                Thread.sleep(retryPeriodLocal);
                             } catch (InterruptedException ignore) {
                                 Thread.currentThread().interrupt();
                             }
@@ -140,13 +167,13 @@ public class StdRowLockSemaphore extends DBSemaphore {
                 if (getLog().isDebugEnabled()) {
                     getLog().debug(
                         "Lock '" + lockName + "' was not obtained by: " + 
-                        Thread.currentThread().getName() + (count < 3 ? " - will try again." : ""));
+                        Thread.currentThread().getName() + (count < maxRetryLocal ? " - will try again." : ""));
                 }
                 
-                if(count < 3) {
+                if(count < maxRetryLocal) {
                     // pause a bit to give another thread some time to commit the insert of the new lock row
                     try {
-                        Thread.sleep(1000L);
+                        Thread.sleep(retryPeriodLocal);
                     } catch (InterruptedException ignore) {
                         Thread.currentThread().interrupt();
                     }
@@ -170,7 +197,7 @@ public class StdRowLockSemaphore extends DBSemaphore {
                     }
                 }
             }
-        } while(count < 4);
+        } while(count < (maxRetryLocal + 1));
         
         throw new LockException("Failure obtaining db row lock, reached maximum number of attempts. Initial exception (if any) attached as root cause.", initCause);
     }

@@ -144,8 +144,8 @@ public class JobExecutionContextImpl implements java.io.Serializable, JobExecuti
 
     public TriggerKey getRecoveringTriggerKey() {
         if (isRecovering()) {
-            return new TriggerKey(jobDataMap.getString(Scheduler.FAILED_JOB_ORIGINAL_TRIGGER_GROUP),
-                                  jobDataMap.getString(Scheduler.FAILED_JOB_ORIGINAL_TRIGGER_NAME));
+            return new TriggerKey(jobDataMap.getString(Scheduler.FAILED_JOB_ORIGINAL_TRIGGER_NAME),
+                                  jobDataMap.getString(Scheduler.FAILED_JOB_ORIGINAL_TRIGGER_GROUP));
         } else {
             throw new IllegalStateException("Not a recovering job");
         }

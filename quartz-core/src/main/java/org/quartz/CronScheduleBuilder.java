@@ -92,7 +92,7 @@ public class CronScheduleBuilder extends ScheduleBuilder<CronTrigger> {
 
     /**
      * Create a CronScheduleBuilder with the given cron-expression string -
-     * which is presumed to b e valid cron expression (and hence only a
+     * which is presumed to be a valid cron expression (and hence only a
      * RuntimeException will be thrown if it is not).
      * 
      * @param cronExpression
